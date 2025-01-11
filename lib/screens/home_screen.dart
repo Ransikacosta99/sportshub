@@ -1,161 +1,161 @@
 import 'package:flutter/material.dart';
 import '../widgets/horizontal_card_list.dart';
 import './profile_screen.dart';
-import 'package:riverpod/riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeScreen extends StatefulWidget {
+final focusNodeProvider = Provider((ref) => FocusNode());
+
+List<Map<String, dynamic>> cardData = [
+  {
+    "imageUrls": [
+      "assets/images/g1.jpg",
+      "assets/images/g2.jpg",
+      "assets/images/g5.jpeg",
+    ],
+    "title": "CLC Basketball Hub",
+    "location": "Colombo",
+    "rating": 4.8,
+    "description":
+        "Our indoor basketball court features professional-grade flooring, top-notch hoops, and a spacious, well-lit environment, providing the perfect setting for thrilling games.",
+    "address": "471 Colombo - Galle Main Rd, Colombo 00300",
+    "contactNo": "078 566 7878",
+    "type": "Basketball",
+    "priceDay": "4500/Day",
+    "priceNight": "5000/night",
+    "dimensions": "94 x 50 ft",
+    "reviews": [
+      {
+        "user": "Sahan Caldera",
+        "comment":
+            "Impressive basketball court! Clean, well-maintained, and friendly staff. A top-notch facility for any basketball enthusiast.",
+        "rating": "5"
+      },
+      {
+        "user": "John Doe",
+        "comment": "Great court, good for a quick game.",
+        "rating": "4"
+      },
+    ],
+  },
+  {
+    "imageUrls": [
+      "assets/images/g1.jpg",
+      "assets/images/g2.jpg",
+      "assets/images/g5.jpeg",
+    ],
+    "title": "CLC Basketball Hub",
+    "location": "Colombo",
+    "rating": 4.8,
+    "description":
+        "Our indoor basketball court features professional-grade flooring, top-notch hoops, and a spacious, well-lit environment, providing the perfect setting for thrilling games.",
+    "address": "471 Colombo - Galle Main Rd, Colombo 00300",
+    "contactNo": "078 566 7878",
+    "type": "Basketball",
+    "priceDay": "4500/Day",
+    "priceNight": "5000/night",
+    "dimensions": "94 x 50 ft",
+    "reviews": [
+      {
+        "user": "Sahan Caldera",
+        "comment":
+            "Impressive basketball court! Clean, well-maintained, and friendly staff. A top-notch facility for any basketball enthusiast.",
+        "rating": "5"
+      },
+      {
+        "user": "John Doe",
+        "comment": "Great court, good for a quick game.",
+        "rating": "4"
+      },
+    ],
+  },
+  {
+    "imageUrls": [
+      "assets/images/g1.jpg",
+      "assets/images/g2.jpg",
+      "assets/images/g5.jpeg",
+    ],
+    "title": "CLC Basketball Hub",
+    "location": "Colombo",
+    "rating": 4.8,
+    "description":
+        "Our indoor basketball court features professional-grade flooring, top-notch hoops, and a spacious, well-lit environment, providing the perfect setting for thrilling games.",
+    "address": "471 Colombo - Galle Main Rd, Colombo 00300",
+    "contactNo": "078 566 7878",
+    "type": "Basketball",
+    "priceDay": "4500/Day",
+    "priceNight": "5000/night",
+    "dimensions": "94 x 50 ft",
+    "reviews": [
+      {
+        "user": "Sahan Caldera",
+        "comment":
+            "Impressive basketball court! Clean, well-maintained, and friendly staff. A top-notch facility for any basketball enthusiast.",
+        "rating": "5"
+      },
+      {
+        "user": "John Doe",
+        "comment": "Great court, good for a quick game.",
+        "rating": "4"
+      },
+    ],
+  },
+  {
+    "imageUrls": [
+      "assets/images/g1.jpg",
+      "assets/images/g2.jpg",
+      "assets/images/g5.jpeg",
+    ],
+    "title": "CLC Basketball Hub",
+    "location": "Colombo",
+    "rating": 4.8,
+    "description":
+        "Our indoor basketball court features professional-grade flooring, top-notch hoops, and a spacious, well-lit environment, providing the perfect setting for thrilling games.",
+    "address": "471 Colombo - Galle Main Rd, Colombo 00300",
+    "contactNo": "078 566 7878",
+    "type": "Basketball",
+    "priceDay": "4500/Day",
+    "priceNight": "5000/night",
+    "dimensions": "94 x 50 ft",
+    "reviews": [
+      {
+        "user": "Sahan Caldera",
+        "comment":
+            "Impressive basketball court! Clean, well-maintained, and friendly staff. A top-notch facility for any basketball enthusiast.",
+        "rating": "5"
+      },
+      {
+        "user": "John Doe",
+        "comment": "Great court, good for a quick game.",
+        "rating": "4"
+      },
+    ],
+  },
+];
+
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Watches the focusNodeProvider to get the current FocusNode
+    final _focusNode = ref.watch(focusNodeProvider);
+    // Watches the hasFocus state of the FocusNode
+    final _isFocused = _focusNode.hasFocus; // Simplified focus check
+    final _searchController = TextEditingController();
 
-class _HomeScreenState extends State<HomeScreen> {
-  final _key = GlobalKey<ScaffoldState>();
-  TextEditingController _searchController = TextEditingController();
-  bool _isFocused = false;
-
-  List<Map<String, dynamic>> cardData = [
-    {
-      "imageUrls": [
-        "assets/images/g1.jpg",
-        "assets/images/g2.jpg",
-        "assets/images/g5.jpeg",
-      ],
-      "title": "CLC Basketball Hub",
-      "location": "Colombo",
-      "rating": 4.8,
-      "description":
-          "Our indoor basketball court features professional-grade flooring, top-notch hoops, and a spacious, well-lit environment, providing the perfect setting for thrilling games.",
-      "address": "471 Colombo - Galle Main Rd, Colombo 00300",
-      "contactNo": "078 566 7878",
-      "type": "Basketball",
-      "priceDay": "4500/Day",
-      "priceNight": "5000/night",
-      "dimensions": "94 x 50 ft",
-      "reviews": [
-        {
-          "user": "Sahan Caldera",
-          "comment":
-              "Impressive basketball court! Clean, well-maintained, and friendly staff. A top-notch facility for any basketball enthusiast.",
-          "rating": "5"
-        },
-        {
-          "user": "John Doe",
-          "comment": "Great court, good for a quick game.",
-          "rating": "4"
-        },
-      ],
-    },
-    {
-      "imageUrls": [
-        "assets/images/g1.jpg",
-        "assets/images/g2.jpg",
-        "assets/images/g5.jpeg",
-      ],
-      "title": "CLC Basketball Hub",
-      "location": "Colombo",
-      "rating": 4.8,
-      "description":
-          "Our indoor basketball court features professional-grade flooring, top-notch hoops, and a spacious, well-lit environment, providing the perfect setting for thrilling games.",
-      "address": "471 Colombo - Galle Main Rd, Colombo 00300",
-      "contactNo": "078 566 7878",
-      "type": "Basketball",
-      "priceDay": "4500/Day",
-      "priceNight": "5000/night",
-      "dimensions": "94 x 50 ft",
-      "reviews": [
-        {
-          "user": "Sahan Caldera",
-          "comment":
-              "Impressive basketball court! Clean, well-maintained, and friendly staff. A top-notch facility for any basketball enthusiast.",
-          "rating": "5"
-        },
-        {
-          "user": "John Doe",
-          "comment": "Great court, good for a quick game.",
-          "rating": "4"
-        },
-      ],
-    },
-    {
-      "imageUrls": [
-        "assets/images/g1.jpg",
-        "assets/images/g2.jpg",
-        "assets/images/g5.jpeg",
-      ],
-      "title": "CLC Basketball Hub",
-      "location": "Colombo",
-      "rating": 4.8,
-      "description":
-          "Our indoor basketball court features professional-grade flooring, top-notch hoops, and a spacious, well-lit environment, providing the perfect setting for thrilling games.",
-      "address": "471 Colombo - Galle Main Rd, Colombo 00300",
-      "contactNo": "078 566 7878",
-      "type": "Basketball",
-      "priceDay": "4500/Day",
-      "priceNight": "5000/night",
-      "dimensions": "94 x 50 ft",
-      "reviews": [
-        {
-          "user": "Sahan Caldera",
-          "comment":
-              "Impressive basketball court! Clean, well-maintained, and friendly staff. A top-notch facility for any basketball enthusiast.",
-          "rating": "5"
-        },
-        {
-          "user": "John Doe",
-          "comment": "Great court, good for a quick game.",
-          "rating": "4"
-        },
-      ],
-    },
-    {
-      "imageUrls": [
-        "assets/images/g1.jpg",
-        "assets/images/g2.jpg",
-        "assets/images/g5.jpeg",
-      ],
-      "title": "CLC Basketball Hub",
-      "location": "Colombo",
-      "rating": 4.8,
-      "description":
-          "Our indoor basketball court features professional-grade flooring, top-notch hoops, and a spacious, well-lit environment, providing the perfect setting for thrilling games.",
-      "address": "471 Colombo - Galle Main Rd, Colombo 00300",
-      "contactNo": "078 566 7878",
-      "type": "Basketball",
-      "priceDay": "4500/Day",
-      "priceNight": "5000/night",
-      "dimensions": "94 x 50 ft",
-      "reviews": [
-        {
-          "user": "Sahan Caldera",
-          "comment":
-              "Impressive basketball court! Clean, well-maintained, and friendly staff. A top-notch facility for any basketball enthusiast.",
-          "rating": "5"
-        },
-        {
-          "user": "John Doe",
-          "comment": "Great court, good for a quick game.",
-          "rating": "4"
-        },
-      ],
-    },
-  ];
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      key: _key,
+      key: GlobalKey<ScaffoldState>(),
       appBar: AppBar(
         backgroundColor: const Color(0xFF2563EB),
         leading: IconButton(
           onPressed: () {
-            if (_key.currentState != null) {
-              if (_key.currentState!.isDrawerOpen) {
-                _key.currentState!.closeDrawer();
-              } else {
-                _key.currentState!.openDrawer();
-              }
+            final scaffoldState = Scaffold.of(context);
+            if (scaffoldState.isDrawerOpen) {
+              scaffoldState.closeDrawer();
+              _focusNode.unfocus();
+            } else {
+              scaffoldState.openDrawer();
+              _focusNode.unfocus();
             }
           },
           icon: const Icon(Icons.menu),
@@ -218,7 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
+        onTap: () => _focusNode.unfocus(),
         behavior: HitTestBehavior.translucent,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,39 +241,33 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  child: FocusScope(
-                    onFocusChange: (hasFocus) =>
-                        setState(() => _isFocused = hasFocus),
-                    child: TextField(
-                      controller: _searchController,
-                      showCursor: _isFocused,
-                      decoration: InputDecoration(
-                        hintText: 'Search...',
-                        prefixIcon: const Icon(Icons.search),
-                        suffixIcon: _searchController.text.isNotEmpty
-                            ? IconButton(
-                                icon: const Icon(Icons.clear),
-                                onPressed: () =>
-                                    setState(() => _searchController.clear()),
-                              )
-                            : null,
-                        border: InputBorder.none,
-                        focusedBorder: InputBorder.none,
-                        enabledBorder: InputBorder.none,
-                        errorBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
-                            vertical: 15.0, horizontal: 20.0),
-                      ),
-                      onChanged: (value) {
-                        debugPrint('onChanged: $value');
-                        setState(() {});
-                      },
-                      onSubmitted: (value) {
-                        FocusScope.of(context).unfocus(); // unfocus on submit
-                        debugPrint('onSubmitted: $value');
-                      },
+                  child: TextField(
+                    controller: _searchController,
+                    focusNode: _focusNode,
+                    decoration: InputDecoration(
+                      hintText: 'Search...',
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: _searchController.text.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () => _searchController.clear(),
+                            )
+                          : null,
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 20.0),
                     ),
+                    onChanged: (value) {
+                      debugPrint('onChanged: $value');
+                    },
+                    onSubmitted: (value) {
+                      FocusScope.of(context).unfocus(); // unfocus on submit
+                      debugPrint('onSubmitted: $value');
+                    },
                   ),
                 ),
               ),
