@@ -13,7 +13,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     // Simulate a delay (e.g., for data loading)
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(milliseconds: 2500), () {
       // Navigate to the next screen
       Navigator.pushReplacementNamed(
           context, '/home'); // Replace '/home' with your route
@@ -25,11 +25,23 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Colors.white, // Customize background color
       body: Center(
-        child: Lottie.asset(
-          'assets/splash_animation.json', // Path to your JSON file
-          width: 300, // Adjust width as needed
-          height: 300, // Adjust height as needed
-          fit: BoxFit.contain, // Adjust fit as needed
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Lottie.asset(
+              'assets/splash_animation.json',
+              width: 300,
+              height: 300,
+              fit: BoxFit.contain,
+            ),
+            // const SizedBox(height: 10),
+            Image.asset(
+              'assets/images/logo.png', // Path to your logo image
+              width: 200, // Adjust width as needed
+              height: 200, // Adjust height as needed
+              fit: BoxFit.contain, // Adjust fit as needed
+            ),
+          ],
         ),
       ),
     );
