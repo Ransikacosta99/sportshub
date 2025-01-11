@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sidebarx/sidebarx.dart';
-import 'package:anim_search_bar/anim_search_bar.dart';
 import '../widgets/horizontal_card_list.dart';
 import './profile_screen.dart';
+import 'package:riverpod/riverpod.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -12,9 +11,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _controller = SidebarXController(selectedIndex: 0, extended: true);
   final _key = GlobalKey<ScaffoldState>();
   TextEditingController _searchController = TextEditingController();
+  bool _isFocused = false;
 
   List<Map<String, dynamic>> cardData = [
     {
@@ -163,104 +162,148 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         title: const Text('Home'),
       ),
-      drawer: SidebarX(
-        controller: _controller,
-        theme: SidebarXTheme(
-          margin: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: canvasColor,
-          ),
-          textStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
-          selectedTextStyle: const TextStyle(color: Colors.white),
-          itemTextPadding: const EdgeInsets.only(left: 30),
-          selectedItemTextPadding: const EdgeInsets.only(left: 30),
-          itemPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        ),
-        extendedTheme: const SidebarXTheme(
-          width: 200,
-          decoration: BoxDecoration(
-            color: canvasColor,
-          ),
-        ),
-        footerDivider: Divider(color: Colors.white.withOpacity(0.3), height: 1),
-        headerBuilder: (context, extended) {
-          return SizedBox(
-            height: 100,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Image.asset(
-                  'assets/images/logo.png'), // Replace with your logo
+      drawer: Drawer(
+        // Use the standard Flutter Drawer
+        backgroundColor: canvasColor, // Set your background color
+        child: ListView(
+          // Use a ListView for scrollable content
+          padding: EdgeInsets.zero, // Remove default padding
+          children: [
+            DrawerHeader(
+              // Use DrawerHeader for the header
+              decoration: const BoxDecoration(
+                color: canvasColor,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Text("Logo Image not found"),
+                ),
+              ),
             ),
-          );
-        },
-        items: [
-          SidebarXItem(
-            icon: Icons.home,
-            label: 'Home',
-          ),
-          SidebarXItem(
-            icon: Icons.person,
-            label: 'Profile',
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ProfileScreen()),
-              );
-            },
-          ),
-          SidebarXItem(
-            icon: Icons.settings,
-            label: 'Settings',
-          ),
-        ],
+            ListTile(
+              // Use ListTile for each menu item
+              leading: const Icon(Icons.home, color: Colors.white),
+              title: const Text('Home', style: TextStyle(color: Colors.white)),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                // Add your navigation logic here
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.person, color: Colors.white),
+              title:
+                  const Text('Profile', style: TextStyle(color: Colors.white)),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ProfileScreen()),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings, color: Colors.white),
+              title:
+                  const Text('Settings', style: TextStyle(color: Colors.white)),
+              onTap: () {
+                Navigator.pop(context); // Close the drawer
+                // Add your navigation logic here
+              },
+            ),
+          ],
+        ),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: AnimSearchBar(
-              width: MediaQuery.of(context).size.width - 16,
-              textController: _searchController,
-              onSuffixTap: () {
-                setState(() {
-                  _searchController.clear();
-                });
-              },
-              onSubmitted: (String value) {
-                debugPrint('onSubmitted: $value');
-              },
-              closeSearchOnSuffixTap: true,
-            ),
-          ),
-          const Padding(
-            // Combined padding
-            padding: EdgeInsets.fromLTRB(18.0, 0, 8.0, 4),
-            child: Text(
-              'For You',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        behavior: HitTestBehavior.translucent,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(20.0),
+                onTap: () {},
+                child: Ink(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).canvasColor,
+                    borderRadius: BorderRadius.circular(20.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.3),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: FocusScope(
+                    onFocusChange: (hasFocus) =>
+                        setState(() => _isFocused = hasFocus),
+                    child: TextField(
+                      controller: _searchController,
+                      showCursor: _isFocused,
+                      decoration: InputDecoration(
+                        hintText: 'Search...',
+                        prefixIcon: const Icon(Icons.search),
+                        suffixIcon: _searchController.text.isNotEmpty
+                            ? IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () =>
+                                    setState(() => _searchController.clear()),
+                              )
+                            : null,
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 15.0, horizontal: 20.0),
+                      ),
+                      onChanged: (value) {
+                        debugPrint('onChanged: $value');
+                        setState(() {});
+                      },
+                      onSubmitted: (value) {
+                        FocusScope.of(context).unfocus(); // unfocus on submit
+                        debugPrint('onSubmitted: $value');
+                      },
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          HorizontalCardList(cardData: cardData),
-          const Padding(
-            // Combined padding
-            padding: EdgeInsets.fromLTRB(18.0, 20, 8.0, 4),
-            child: Text(
-              'This weeks top 10',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(18.0, 0, 8.0, 4.0),
+              child: Text(
+                'For You',
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          HorizontalCardList(cardData: cardData),
-        ],
+            const SizedBox(height: 8.0),
+            HorizontalCardList(cardData: cardData),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(18.0, 20.0, 8.0, 4.0),
+              child: Text(
+                'This week\'s top 10',
+                style: const TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            HorizontalCardList(cardData: cardData),
+          ],
+        ),
       ),
     );
   }
