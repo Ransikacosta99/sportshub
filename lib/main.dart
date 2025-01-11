@@ -1,5 +1,6 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:sphub/screens/item_screen.dart';
 import 'screens/phone_entry_screen.dart';
 import 'screens/home_screen.dart';
@@ -25,8 +26,12 @@ class MyApp extends StatelessWidget {
           seedColor: const Color(0xFF2563EB),
           background: Colors.white,
         ),
+        textTheme: GoogleFonts.montserratTextTheme(
+          // Apply Montserrat globally
+          ThemeData.light().textTheme, // Use a light theme as a base
+        ),
       ),
-    home: HomeScreen(),
+      home: HomeScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

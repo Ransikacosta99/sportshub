@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sidebarx/sidebarx.dart'; 
+import 'package:sidebarx/sidebarx.dart';
 import 'package:anim_search_bar/anim_search_bar.dart';
 import '../widgets/horizontal_card_list.dart';
 
@@ -16,43 +16,131 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController _searchController = TextEditingController();
 
   List<Map<String, dynamic>> cardData = [
-  {
-    "image": "assets/images/g1.jpg",
-    "title": "CLC Basketball Hub",
-    "description": "Rs. 3500/ day",
-    "rating": 4.5, // Add the rating here
-  },
-  {
-    "image": "assets/images/g2.jpg",
-    "title": "Sugathadasa bay",
-    "description": "Rs. 3500/ day",
-    "rating": 3, // Add the rating here
-  },
     {
-    "image": "assets/images/g3.jpg",
-    "title": "CLC Basketball Hub",
-    "description": "Rs. 3500/ day",
-    "rating": 5, // Add the rating here
-  },
-  {
-    "image": "assets/images/g4.jpg",
-    "title": "CLC Basketball Hub",
-    "description": "Rs. 3500/ day",
-    "rating": 5, // Add the rating here
-  },
-  {
-    "image": "assets/images/g5.jpeg",
-    "title": "CLC Basketball Hub",
-    "description": "Rs. 3500/ day",
-    "rating": 5, // Add the rating here
-  },
-  {
-    "image": "assets/images/g6.jpg",
-    "title": "CLC Basketball Hub",
-    "description": "Rs. 3500/ day",
-    "rating": 5, // Add the rating here
-  }
-];
+      "imageUrls": [
+        "assets/images/g1.jpg",
+        "assets/images/g2.jpg",
+        "assets/images/g5.jpeg",
+      ],
+      "title": "CLC Basketball Hub",
+      "location": "Colombo",
+      "rating": 4.8,
+      "description":
+          "Our indoor basketball court features professional-grade flooring, top-notch hoops, and a spacious, well-lit environment, providing the perfect setting for thrilling games.",
+      "address": "471 Colombo - Galle Main Rd, Colombo 00300",
+      "contactNo": "078 566 7878",
+      "type": "Basketball",
+      "priceDay": "4500/Day",
+      "priceNight": "5000/night",
+      "dimensions": "94 x 50 ft",
+      "reviews": [
+        {
+          "user": "Sahan Caldera",
+          "comment":
+              "Impressive basketball court! Clean, well-maintained, and friendly staff. A top-notch facility for any basketball enthusiast.",
+          "rating": "5"
+        },
+        {
+          "user": "John Doe",
+          "comment": "Great court, good for a quick game.",
+          "rating": "4"
+        },
+      ],
+    },
+    {
+      "imageUrls": [
+        "assets/images/g1.jpg",
+        "assets/images/g2.jpg",
+        "assets/images/g5.jpeg",
+      ],
+      "title": "CLC Basketball Hub",
+      "location": "Colombo",
+      "rating": 4.8,
+      "description":
+          "Our indoor basketball court features professional-grade flooring, top-notch hoops, and a spacious, well-lit environment, providing the perfect setting for thrilling games.",
+      "address": "471 Colombo - Galle Main Rd, Colombo 00300",
+      "contactNo": "078 566 7878",
+      "type": "Basketball",
+      "priceDay": "4500/Day",
+      "priceNight": "5000/night",
+      "dimensions": "94 x 50 ft",
+      "reviews": [
+        {
+          "user": "Sahan Caldera",
+          "comment":
+              "Impressive basketball court! Clean, well-maintained, and friendly staff. A top-notch facility for any basketball enthusiast.",
+          "rating": "5"
+        },
+        {
+          "user": "John Doe",
+          "comment": "Great court, good for a quick game.",
+          "rating": "4"
+        },
+      ],
+    },
+    {
+      "imageUrls": [
+        "assets/images/g1.jpg",
+        "assets/images/g2.jpg",
+        "assets/images/g5.jpeg",
+      ],
+      "title": "CLC Basketball Hub",
+      "location": "Colombo",
+      "rating": 4.8,
+      "description":
+          "Our indoor basketball court features professional-grade flooring, top-notch hoops, and a spacious, well-lit environment, providing the perfect setting for thrilling games.",
+      "address": "471 Colombo - Galle Main Rd, Colombo 00300",
+      "contactNo": "078 566 7878",
+      "type": "Basketball",
+      "priceDay": "4500/Day",
+      "priceNight": "5000/night",
+      "dimensions": "94 x 50 ft",
+      "reviews": [
+        {
+          "user": "Sahan Caldera",
+          "comment":
+              "Impressive basketball court! Clean, well-maintained, and friendly staff. A top-notch facility for any basketball enthusiast.",
+          "rating": "5"
+        },
+        {
+          "user": "John Doe",
+          "comment": "Great court, good for a quick game.",
+          "rating": "4"
+        },
+      ],
+    },
+    {
+      "imageUrls": [
+        "assets/images/g1.jpg",
+        "assets/images/g2.jpg",
+        "assets/images/g5.jpeg",
+      ],
+      "title": "CLC Basketball Hub",
+      "location": "Colombo",
+      "rating": 4.8,
+      "description":
+          "Our indoor basketball court features professional-grade flooring, top-notch hoops, and a spacious, well-lit environment, providing the perfect setting for thrilling games.",
+      "address": "471 Colombo - Galle Main Rd, Colombo 00300",
+      "contactNo": "078 566 7878",
+      "type": "Basketball",
+      "priceDay": "4500/Day",
+      "priceNight": "5000/night",
+      "dimensions": "94 x 50 ft",
+      "reviews": [
+        {
+          "user": "Sahan Caldera",
+          "comment":
+              "Impressive basketball court! Clean, well-maintained, and friendly staff. A top-notch facility for any basketball enthusiast.",
+          "rating": "5"
+        },
+        {
+          "user": "John Doe",
+          "comment": "Great court, good for a quick game.",
+          "rating": "4"
+        },
+      ],
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +188,8 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 100,
             child: Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Image.asset('assets/images/logo.png'), // Replace with your logo
+              child: Image.asset(
+                  'assets/images/logo.png'), // Replace with your logo
             ),
           );
         },
@@ -120,6 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -137,23 +227,31 @@ class _HomeScreenState extends State<HomeScreen> {
               closeSearchOnSuffixTap: true,
             ),
           ),
-          const Text(
-              'Book again', // The heading
+          const Padding(
+            // Combined padding
+            padding: EdgeInsets.fromLTRB(18.0, 0, 8.0, 4),
+            child: Text(
+              'For You',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+          ),
+          const SizedBox(height: 8),
           HorizontalCardList(cardData: cardData),
-          const Text(
-              'This weeks top 10', // The heading
+          const Padding(
+            // Combined padding
+            padding: EdgeInsets.fromLTRB(18.0, 20, 8.0, 4),
+            child: Text(
+              'This weeks top 10',
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
+          ),
+          const SizedBox(height: 8),
           HorizontalCardList(cardData: cardData),
         ],
       ),
