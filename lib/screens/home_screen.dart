@@ -167,15 +167,16 @@ class _HomeScreenState extends State<HomeScreen> {
       // ),
       drawer: Drawer(
         // Use the standard Flutter Drawer
-        backgroundColor: canvasColor, // Set your background color
+        backgroundColor:
+            Theme.of(context).canvasColor, // Set your background color
         child: ListView(
           // Use a ListView for scrollable content
           padding: EdgeInsets.zero, // Remove default padding
           children: [
             DrawerHeader(
               // Use DrawerHeader for the header
-              decoration: const BoxDecoration(
-                color: canvasColor,
+              decoration: BoxDecoration(
+                color: Theme.of(context).canvasColor,
               ),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -276,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onTap: () {},
               child: Ink(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).canvasColor,
+                  color: const Color(0xFFF5F5F5),
                   borderRadius: BorderRadius.circular(20.0),
                   boxShadow: [
                     BoxShadow(
@@ -347,5 +348,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-const canvasColor = Color(0xFF2E2E48);
