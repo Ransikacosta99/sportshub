@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/custom_submit_button.dart';
+import '../widgets/gallery_photo_view_wrapper.dart';
 import 'booking_screen.dart';
 
 class ItemScreen extends StatelessWidget {
@@ -33,110 +35,263 @@ class ItemScreen extends StatelessWidget {
     required this.reviews,
   }) : super(key: key);
 
+  void _openImageGallery(BuildContext context, int initialIndex) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GalleryPhotoViewWrapper(
+          galleryItems: imagePaths,
+          initialIndex: initialIndex,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(title,
-                              style: const TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.bold)),
-                          Text(location,
-                              style: const TextStyle(
-                                  fontSize: 16, color: Colors.grey)),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Icon(Icons.star, color: Colors.yellow[700]),
-                          const SizedBox(width: 4),
-                          Text(rating.toString(),
-                              style: const TextStyle(fontSize: 16)),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  CarouselSlider(
-                    // Use CarouselSlider
-                    options: CarouselOptions(
-                      height: 200.0,
-                      enlargeCenterPage: true,
-                      autoPlay: true, // Optional: Enable auto-play
-                      aspectRatio: 16 / 9,
-                      viewportFraction: 1,
+          // Background Image
+          SizedBox(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height * 0.45,
+            child: Image.asset(
+              imagePaths.isNotEmpty ? imagePaths[0] : 'assets/placeholder.jpg',
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          // Main Content
+          CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.35,
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
                     ),
-                    items: imagePaths.map((imagePath) {
-                      return Builder(
-                        builder: (BuildContext context) {
-                          return Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                            decoration: const BoxDecoration(
-                              color: Colors.grey, // Placeholder color
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(8.0),
-                              child: Image.asset(
-                                imagePath,
-                                fit: BoxFit.cover,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Title and Price
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    title,
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.location_on,
+                                        color: Colors.blue,
+                                        size: 16,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        location,
+                                        style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        },
-                      );
-                    }).toList(),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '\$$priceDay',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+
+                        // Preview and Rating
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Preview',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Icon(Icons.star,
+                                    color: Colors.yellow[700], size: 20),
+                                const SizedBox(width: 4),
+                                Text(
+                                  rating.toString(),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+
+                        // Preview Images
+                        SizedBox(
+                          height: 100,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: imagePaths.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () => _openImageGallery(context, index),
+                                child: Container(
+                                  margin: const EdgeInsets.only(right: 10),
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    image: DecorationImage(
+                                      image: AssetImage(imagePaths[index]),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+
+                        // Description
+                        Text(
+                          description,
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            height: 1.5,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+
+                        // Details Section
+                        const Text(
+                          "Details",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        _buildDetailRow("Address", address),
+                        _buildDetailRow("Contact No", contactNo),
+                        _buildDetailRow("Type", type),
+                        _buildDetailRow("Dimensions", dimensions),
+                        const SizedBox(height: 20),
+
+                        // Reviews Section
+                        const Text(
+                          "Reviews",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        _buildReviews(reviews),
+                        const SizedBox(height: 20),
+
+                        // Book Now Button
+                        SizedBox(
+                          width: double.infinity,
+                          child: CustomSubmitButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const BookingScreen(),
+                                ),
+                              );
+                            },
+                            label: "Book Now",
+                            backgroundColor: Colors.blue,
+                            textColor: Colors.white,
+                            fontSize: 18,
+                            elevation: 0,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 16),
-                  Text(description, style: const TextStyle(fontSize: 16)),
-                  const SizedBox(height: 16),
-                  const Text("Details",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  _buildDetailRow("Address", address),
-                  _buildDetailRow("Contact No", contactNo),
-                  _buildDetailRow("Type", type),
-                  _buildDetailRow("Price", "$priceDay / $priceNight"),
-                  _buildDetailRow("Dimensions", dimensions),
-                  const SizedBox(height: 16),
-                  const Text("Reviews",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  _buildReviews(reviews),
-                ],
+                ),
+              ),
+            ],
+          ),
+
+          // Back Button
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 10,
+            left: 16,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.9),
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () => Navigator.pop(context),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const BookingScreen()), // Navigate to BookingScreen
-    );
-  },
-                child: const Text("Book Now"),
+
+          // Favorite Button
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 10,
+            right: 16,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withOpacity(0.9),
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.favorite_border),
+                onPressed: () {},
               ),
             ),
           ),
@@ -151,9 +306,24 @@ class ItemScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label + ": ",
-              style: const TextStyle(fontWeight: FontWeight.bold)),
-          Expanded(child: Text(value)),
+          SizedBox(
+            width: 100,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.grey,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                color: Colors.black87,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -163,28 +333,40 @@ class ItemScreen extends StatelessWidget {
     return Column(
       children: reviews.map((review) {
         return Card(
+          elevation: 0,
+          margin: const EdgeInsets.only(bottom: 8),
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(review["user"]!,
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text(
+                      review["user"]!,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     Row(
                       children: [
-                        Icon(Icons.star, color: Colors.yellow[700]),
+                        Icon(Icons.star, color: Colors.yellow[700], size: 16),
                         const SizedBox(width: 4),
-                        Text(review["rating"]!,
-                            style: const TextStyle(fontSize: 16)),
+                        Text(
+                          review["rating"]!,
+                          style: const TextStyle(fontSize: 14),
+                        ),
                       ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
-                Text(review["comment"]!),
+                const SizedBox(height: 8),
+                Text(
+                  review["comment"]!,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    height: 1.3,
+                  ),
+                ),
               ],
             ),
           ),

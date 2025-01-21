@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../widgets/horizontal_card_list.dart';
 import './profile_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+
+import 'search_screen.dart';
 
 final focusNodeProvider = Provider((ref) => FocusNode());
 
@@ -132,36 +135,36 @@ List<Map<String, dynamic>> cardData = [
   },
 ];
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _pageIndex = 0;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // Watches the focusNodeProvider to get the current FocusNode
-    final _focusNode = ref.watch(focusNodeProvider);
-    // Watches the hasFocus state of the FocusNode
-    final _isFocused = _focusNode.hasFocus; // Simplified focus check
-    final _searchController = TextEditingController();
-
+  Widget build(BuildContext context) {
     return Scaffold(
-      key: GlobalKey<ScaffoldState>(),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF2563EB),
-        leading: IconButton(
-          onPressed: () {
-            final scaffoldState = Scaffold.of(context);
-            if (scaffoldState.isDrawerOpen) {
-              scaffoldState.closeDrawer();
-              _focusNode.unfocus();
-            } else {
-              scaffoldState.openDrawer();
-              _focusNode.unfocus();
-            }
-          },
-          icon: const Icon(Icons.menu),
-        ),
-        title: const Text('Home'),
-      ),
+      extendBody: true,
+      // appBar: AppBar(
+      //   backgroundColor: const Color(0xFF2563EB),
+      //   leading: IconButton(
+      //     onPressed: () {
+      //       final scaffoldState = Scaffold.of(context);
+      //       if (scaffoldState.isDrawerOpen) {
+      //         scaffoldState.closeDrawer();
+      //         _focusNode.unfocus();
+      //       } else {
+      //         scaffoldState.openDrawer();
+      //         _focusNode.unfocus();
+      //       }
+      //     },
+      //     icon: const Icon(Icons.menu),
+      //   ),
+      //   title: const Text('Home'),
+      // ),
       drawer: Drawer(
         // Use the standard Flutter Drawer
         backgroundColor: canvasColor, // Set your background color
@@ -217,87 +220,129 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
       ),
-      body: GestureDetector(
-        onTap: () => _focusNode.unfocus(),
-        behavior: HitTestBehavior.translucent,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 20, 8, 20),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(20.0),
-                onTap: () {},
-                child: Ink(
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).canvasColor,
-                    borderRadius: BorderRadius.circular(20.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: TextField(
-                    controller: _searchController,
-                    focusNode: _focusNode,
-                    decoration: InputDecoration(
-                      hintText: 'Search...',
-                      prefixIcon: const Icon(Icons.search),
-                      suffixIcon: _searchController.text.isNotEmpty
-                          ? IconButton(
-                              icon: const Icon(Icons.clear),
-                              onPressed: () => _searchController.clear(),
-                            )
-                          : null,
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 15.0, horizontal: 20.0),
+      body: _buildBody(),
+      bottomNavigationBar: CurvedNavigationBar(
+        index: _pageIndex,
+        backgroundColor:
+            const Color.fromARGB(0, 255, 0, 0), // Make background transparent
+        color: const Color.fromARGB(115, 0, 0, 0), // Use your primary color
+        buttonBackgroundColor: Theme.of(context).primaryColor,
+        animationDuration: const Duration(milliseconds: 300),
+        height: 60,
+        items: const <Widget>[
+          Icon(Icons.home_outlined, size: 30, color: Colors.white),
+          Icon(Icons.search, size: 30, color: Colors.white), // Add explore icon
+          Icon(Icons.person_outline, size: 30, color: Colors.white),
+        ],
+        onTap: (index) {
+          if (index != _pageIndex) {
+            // Only setState if the index has changed
+            setState(() {
+              _pageIndex = index;
+            });
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildBody() {
+    switch (_pageIndex) {
+      case 0:
+        return _buildHomeContent(); // Call separate function for home content
+      case 1:
+        return const SearchScreen(); // Explore screen
+      case 2:
+        return const ProfileScreen(); // Profile screen
+      default:
+        return Container(); // Default case
+    }
+  }
+
+  Widget _buildHomeContent() {
+    final _focusNode = FocusNode(); // Create FocusNode here
+    final _searchController = TextEditingController();
+
+    return GestureDetector(
+      onTap: () => _focusNode.unfocus(),
+      behavior: HitTestBehavior.translucent,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 50, 15, 20),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20.0),
+              onTap: () {},
+              child: Ink(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).canvasColor,
+                  borderRadius: BorderRadius.circular(20.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.3),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: const Offset(0, 3),
                     ),
-                    onChanged: (value) {
-                      debugPrint('onChanged: $value');
-                    },
-                    onSubmitted: (value) {
-                      FocusScope.of(context).unfocus(); // unfocus on submit
-                      debugPrint('onSubmitted: $value');
-                    },
+                  ],
+                ),
+                child: TextField(
+                  controller: _searchController,
+                  focusNode: _focusNode,
+                  decoration: InputDecoration(
+                    hintText: 'Search...',
+                    prefixIcon: const Icon(Icons.search),
+                    suffixIcon: _searchController.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () => _searchController.clear(),
+                          )
+                        : null,
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 15.0, horizontal: 20.0),
                   ),
+                  onChanged: (value) {
+                    debugPrint('onChanged: $value');
+                  },
+                  onSubmitted: (value) {
+                    FocusScope.of(context).unfocus(); // unfocus on submit
+                    debugPrint('onSubmitted: $value');
+                  },
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(18.0, 0, 8.0, 4.0),
-              child: Text(
-                'For You',
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(18.0, 0, 8.0, 4.0),
+            child: Text(
+              'For You',
+              style: const TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8.0),
-            HorizontalCardList(cardData: cardData),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(18.0, 20.0, 8.0, 4.0),
-              child: Text(
-                'This week\'s top 10',
-                style: const TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
+          ),
+          const SizedBox(height: 8.0),
+          HorizontalCardList(cardData: cardData),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(18.0, 20.0, 8.0, 4.0),
+            child: Text(
+              'This week\'s top 10',
+              style: const TextStyle(
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8.0),
-            HorizontalCardList(cardData: cardData),
-          ],
-        ),
+          ),
+          const SizedBox(height: 8.0),
+          HorizontalCardList(cardData: cardData),
+        ],
       ),
     );
   }

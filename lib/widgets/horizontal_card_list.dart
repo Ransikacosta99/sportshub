@@ -11,7 +11,7 @@ class HorizontalCardList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 200,
+      height: 220,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: cardData.length,
@@ -48,51 +48,40 @@ class HorizontalCardList extends StatelessWidget {
               );
             },
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              padding: const EdgeInsets.symmetric(horizontal: 6.0),
               child: SizedBox(
                 width: 200,
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  elevation: 3.0,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 120,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Image with rounded corners and elevation
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      elevation: 3.0,
+                      margin: EdgeInsets.zero,
+                      clipBehavior: Clip.antiAlias,
+                      child: SizedBox(
+                        height: 150,
+                        width: double.infinity,
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(12.0),
-                                  topRight: Radius.circular(12.0),
-                                ),
-                                image: DecorationImage(
-                                  image: AssetImage(itemData["imageUrls"][1]!),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+                            Image.asset(
+                              itemData["imageUrls"][1]!,
+                              fit: BoxFit.cover,
                             ),
                             Positioned(
                               top: 6,
                               right: 6,
                               child: Material(
-                                // Wrap the rating in a Material widget
-                                elevation:
-                                    2, // Add a small elevation for shadow
+                                elevation: 2,
                                 borderRadius: BorderRadius.circular(4),
-                                color: Colors
-                                    .transparent, // Make Material background transparent
-                                child: Container(
+                                color: Colors.black.withOpacity(0.5),
+                                child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 6, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.5),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -122,32 +111,40 @@ class HorizontalCardList extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              itemData["title"]!,
-                              style: GoogleFonts.poppins(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              itemData["priceDay"],
-                              style: GoogleFonts.lato(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
+                    ),
+                    // Title
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 6.0, top: 6, right: 6),
+                      child: Text(
+                        itemData["title"]!,
+                        style: GoogleFonts.poppins(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    // Location
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 6.0, bottom: 6, right: 6),
+                      child: Row(
+                        children: [
+                          Icon(Icons.location_on,
+                              color: Theme.of(context).primaryColor, size: 16),
+                          const SizedBox(width: 4),
+                          Text(
+                            itemData["location"],
+                            style: GoogleFonts.lato(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

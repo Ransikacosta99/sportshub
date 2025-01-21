@@ -29,12 +29,12 @@ class _BookingScreenState extends State<BookingScreen> {
     'Court 2': [
       BookingSlot('9 AM - 10 AM', 3500, 'day'),
       BookingSlot('1 PM - 2 PM', 3500, 'day'),
-       BookingSlot('6 PM - 7 PM', 4000, 'night'),
+      BookingSlot('6 PM - 7 PM', 4000, 'night'),
     ],
     'Court 3': [
       BookingSlot('10 AM - 11 AM', 4000, 'day'),
       BookingSlot('4 PM - 5 PM', 4000, 'day'),
-       BookingSlot('7 PM - 8 PM', 4500, 'night'),
+      BookingSlot('7 PM - 8 PM', 4500, 'night'),
     ],
   };
 
@@ -42,8 +42,10 @@ class _BookingScreenState extends State<BookingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold( // You might remove Scaffold if it's already in your parent widget
-      appBar: AppBar( // You might remove AppBar if it's already in your parent widget or not needed
+    return Scaffold(
+      // You might remove Scaffold if it's already in your parent widget
+      appBar: AppBar(
+        // You might remove AppBar if it's already in your parent widget or not needed
         title: const Text('CLC Basketball Hub'),
       ),
       body: Padding(
@@ -102,40 +104,62 @@ class _BookingScreenState extends State<BookingScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSlotSection('Day',
-                          _slots[_selectedCourt]?.where((slot) => slot.type == 'day').toList() ?? []),
-                      _buildSlotSection('Night',
-                          _slots[_selectedCourt]?.where((slot) => slot.type == 'night').toList() ?? []),
+                      _buildSlotSection(
+                          'Day',
+                          _slots[_selectedCourt]
+                                  ?.where((slot) => slot.type == 'day')
+                                  .toList() ??
+                              []),
+                      _buildSlotSection(
+                          'Night',
+                          _slots[_selectedCourt]
+                                  ?.where((slot) => slot.type == 'night')
+                                  .toList() ??
+                              []),
                     ],
                   ),
                 ),
               ),
             const SizedBox(height: 20),
-            Text('Total: Rs. ${_selectedSlots.fold<int>(0, (previousValue, element) => previousValue + element.price)}.00'),
+            Text(
+                'Total: Rs. ${_selectedSlots.fold<int>(0, (previousValue, element) => previousValue + element.price)}.00'),
             Center(
               child: ElevatedButton(
-                onPressed: _selectedDate == null ? null : () {
-  if (_selectedSlots.isNotEmpty) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PaymentConfirmationScreen(
-          name: 'Kalindu Gandhara', // Replace with actual user data
-          mobile: '070 4660990', // Replace with actual user data
-          place: 'CLC Basketball Hub',
-          courtId: 3, // Or get the actual court ID
-          slots: _selectedSlots.map((slot) => slot.time).toList(),
-          total: _selectedSlots.fold<double>(0, (previousValue, element) => previousValue + element.price).toDouble(),
-        ),
-      ),
-    );
-  } else {
-    // Handle no slots selected
-    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Please select at least one slot')),
-                    );
-  }
-},
+                onPressed: _selectedDate == null
+                    ? null
+                    : () {
+                        if (_selectedSlots.isNotEmpty) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PaymentConfirmationScreen(
+                                name:
+                                    'Kalindu Gandhara', // Replace with actual user data
+                                mobile:
+                                    '070 4660990', // Replace with actual user data
+                                place: 'CLC Basketball Hub',
+                                courtId: 3, // Or get the actual court ID
+                                slots: _selectedSlots
+                                    .map((slot) => slot.time)
+                                    .toList(),
+                                total: _selectedSlots
+                                    .fold<double>(
+                                        0,
+                                        (previousValue, element) =>
+                                            previousValue + element.price)
+                                    .toDouble(),
+                              ),
+                            ),
+                          );
+                        } else {
+                          // Handle no slots selected
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content:
+                                    Text('Please select at least one slot')),
+                          );
+                        }
+                      },
                 child: const Text('Proceed'),
               ),
             ),
@@ -152,7 +176,8 @@ class _BookingScreenState extends State<BookingScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text(title,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         const SizedBox(height: 10),
         GridView.builder(
           shrinkWrap: true,

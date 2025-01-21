@@ -7,6 +7,8 @@ import 'screens/phone_entry_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/payment_screen.dart';
 import 'screens/booking_screen.dart';
+import 'screens/profile_screen.dart';
+import 'screens/search_screen.dart';
 import 'screens/splash_screen.dart';
 
 void main() {
@@ -44,7 +46,10 @@ class MyApp extends StatelessWidget {
             const SplashScreen(), // Define the splash screen route
         '/home': (context) =>
             const HomeScreen(), // Define the home screen route
-        // ... other routes
+        '/profile': (context) =>
+            const ProfileScreen(), // Define the home screen route
+        '/search': (context) =>
+            const SearchScreen(), // Define the home screen route
       },
       debugShowCheckedModeBanner: false,
     );
